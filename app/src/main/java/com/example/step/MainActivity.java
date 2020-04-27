@@ -3,6 +3,8 @@ package com.example.step;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,8 +18,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public SensorManager sensorManager;
     public Sensor stepCountSensor;
-    TextView stepsTextView;
+    TextView stepsTextView,kcalTextView;
     ProgressBar stepsProgressBar;
+
+
 
 
     @Override
@@ -29,14 +33,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         stepsProgressBar = (ProgressBar) findViewById(R.id.stepsProgressBar); //*
-
+        kcalTextView = (TextView) findViewById(R.id.kcalTextView);
 
 
         if (stepCountSensor == null) {
             Toast.makeText(this, "No step Detect Sensor", Toast.LENGTH_SHORT).show();
-
-
-
 
         }
     }
@@ -59,12 +60,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) { //센서 동작 감지시 이벤트 발생하여 이 함수에 값 전달
         if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-            stepsTextView.setText(String.valueOf(event.values[0]));
+            //stepsTextView.setText(String.valueOf(event.values[0]));
+            stepsTextView.setText(String.valueOf((int)event.values[0]));
 
-            int a=Integer.valueOf((int) event.values[0]);
-            stepsProgressBar.setProgress(a);
+            int steps=Integer.valueOf((int) event.values[0]);
+            stepsProgressBar.setProgress(steps);
+
+            kcalTextView.setText("예상"+steps+"kcal 소모");
         }
-
     }
 
     @Override
